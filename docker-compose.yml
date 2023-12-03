@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   db:
     image: mariadb
@@ -12,3 +12,16 @@ services:
       - ./data:/var/lib/mysql
     ports:
       - "3306:3306"
+  redis:
+    image: redis:latest
+    container_name: rediscache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data:/root/redis
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=123456
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16

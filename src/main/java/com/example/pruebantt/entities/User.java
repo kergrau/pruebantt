@@ -1,5 +1,6 @@
 package com.example.pruebantt.entities;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +27,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User implements Serializable {
+
+	private static final long serialVersionUID = 5178673896914202073L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

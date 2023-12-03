@@ -1,5 +1,7 @@
 package com.example.pruebantt.entities;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +17,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role {
+public class Role implements Serializable {
+
+	private static final long serialVersionUID = -462610150110531143L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -33,11 +33,18 @@ import com.example.pruebantt.repositories.UserRepository;
 import com.example.pruebantt.security.jwt.JwtUtils;
 import com.example.pruebantt.security.services.UserDetailsImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
+@Tag(name = "Authentication", description = "Auths API's")
 public class AuthController {
 
 	@Autowired
@@ -56,6 +63,11 @@ public class AuthController {
 	JwtUtils jwtUtils;
 
 	@PostMapping("/signin")
+	@Operation(description = "Sign In authentication endpoint", summary = "You must put your user and password to be access to other endpoints")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Sign in", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = UserInfoResponseDto.class)) }),
+			@ApiResponse(responseCode = "500", description = "Error not exepected", content = {
+					@Content(schema = @Schema()) }) })
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequestDto loginRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
@@ -79,6 +91,11 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
+	@Operation(description = "Sign Up user endpoint")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Sign Up", content = { @Content(schema = @Schema()) }),
+			@ApiResponse(responseCode = "500", description = "Error not exepected", content = {
+					@Content(schema = @Schema()) }) })
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequestDto signUpRequest) {
 
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -101,11 +118,16 @@ public class AuthController {
 		roles.add(userRole);
 
 		user.setRoles(roles);
-		User userSaved = userRepository.save(user);
-		return new ResponseEntity<>(userSaved, HttpStatus.CREATED);
+		userRepository.save(user);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PostMapping("/signout")
+	@Operation(description = "Sign Up user endpoint")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Log out", content = { @Content(schema = @Schema()) }),
+			@ApiResponse(responseCode = "500", description = "Error not exepected", content = {
+					@Content(schema = @Schema()) }) })
 	public ResponseEntity<?> logoutUser() {
 		ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
 		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())

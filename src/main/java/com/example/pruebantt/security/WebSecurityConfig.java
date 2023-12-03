@@ -54,7 +54,10 @@ public class WebSecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(auth -> auth.requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**"))
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**"),
+								AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
+								AntPathRequestMatcher.antMatcher("/v3/**"))
 						.permitAll().anyRequest().authenticated());
 
 		http.authenticationProvider(authenticationProvider());
